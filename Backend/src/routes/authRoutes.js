@@ -20,13 +20,6 @@ router.post(
   authController.register
 );
 
-// Send OTP
-router.post(
-  "/send-otp",
-  authValidator.sendOTPValidator,
-  authController.sendOTP
-);
-
 // Login
 router.post("/login", authValidator.loginValidator, authController.login);
 

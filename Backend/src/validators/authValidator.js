@@ -10,7 +10,6 @@ const {
   strongPasswordFieldValidator: resetPasswordFieldValidator,
   strongPasswordFieldValidator: updatePasswordFieldValidator,
   passwordFieldValidator,
-  otpFieldValidator,
   confirmPasswordValidator,
 } = require("./commonFieldValidators");
 
@@ -21,12 +20,7 @@ exports.registerValidator = validate([
   phoneFieldValidator,
   registerPasswordFieldValidator("password"),
   confirmPasswordValidator("password", "confirmPassword"),
-  otpFieldValidator,
 ]);
-
-exports.verifyEmail = validate([emailFieldValidator, otpFieldValidator]);
-
-exports.sendOTPValidator = validate([emailFieldValidator]);
 
 exports.loginValidator = validate([
   emailFieldValidator,

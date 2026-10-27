@@ -9,26 +9,13 @@ const buildEmailTemplate = ({
   firstName,
   title,
   message,
-  otp = null,
   buttonText = null,
   buttonLink = null,
   footerNote = null,
 }) => {
   const year = new Date().getFullYear();
-  const expiryMinutes = process.env.OTP_EXPIRES_IN_MINUTES || 10;
   const appName = process.env.FROM_NAME || "App Platform";
   const greeting = firstName ? `Hi ${firstName},` : "";
-
-  const otpBlock = otp
-    ? `
-      <div style="text-align:center;margin:20px 0;">
-        <span style="display:inline-block;background:#4CAF50;color:#fff;font-size:24px;padding:10px 24px;border-radius:6px;letter-spacing:4px;font-weight:bold;">
-          ${otp}
-        </span>
-      </div>
-      <p style="text-align:center;">This OTP is valid for <strong>${expiryMinutes} minutes</strong>.</p>
-    `
-    : "";
 
   const buttonBlock =
     buttonText && buttonLink
@@ -73,7 +60,6 @@ const buildEmailTemplate = ({
                 <h2 style="color:#333;font-size:24px;margin-bottom:10px;">${title}</h2>
                 <p style="margin:0 0 10px;">${greeting}</p>
                 <p style="margin:0 0 20px;">${message}</p>
-                ${otpBlock}
                 ${buttonBlock}
                 <p style="color:#555;font-size:14px;">${finalFooterNote}</p>
                 <p style="margin-top:30px;font-size:14px;">Regards,<br><strong>${appName}</strong></p>
@@ -149,28 +135,6 @@ const sendEmail = async ({ to, subject, html }) => {
 };
 
 // === Specific Email APIs ===
-
-const sendRegistrationOtpEmail = async ({ user, otp }) => {
-  if (!user?.email || !otp) throw new Error("Missing user or OTP");
-
-  if (process.env.NODE_ENV === "development") {
-    logger.info(`🔑 [dev] OTP for ${user.email}: ${otp}`);
-  }
-
-  const html = buildEmailTemplate({
-    firstName: user.firstName || "there",
-    title: "Verify Your Email",
-    message:
-      "To verify your email and create your account, please use the OTP below:",
-    otp,
-  });
-
-  return sendEmail({
-    to: user.email,
-    subject: "Email Verification OTP",
-    html,
-  });
-};
 
 const sendPasswordResetEmail = async ({ user, passwordResetUrl }) => {
   if (!user?.email || !user.passwordResetToken || !passwordResetUrl)
@@ -299,7 +263,6 @@ const sendFeedbackResolvedEmail = async ({ user, message }) => {
 };
 
 module.exports = {
-  sendRegistrationOtpEmail,
   sendPasswordResetEmail,
   sendGuideWelcomeEmail,
   sendAdminWelcomeEmail,

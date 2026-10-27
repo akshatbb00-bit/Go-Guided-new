@@ -127,16 +127,6 @@ exports.passwordFieldValidator = (fieldName) =>
   body(fieldName)
     .notEmpty()
     .withMessage(`${formatFieldName(fieldName)} is required`);
-
-exports.otpFieldValidator = body("otp")
-  .trim()
-  .notEmpty()
-  .withMessage("OTP is required.")
-  .isLength({ min: 6, max: 6 })
-  .withMessage("OTP must be exactly 6 digits.")
-  .isNumeric()
-  .withMessage("OTP must contain only numbers.");
-
 exports.tourFieldValidator = [
   body("tour._id")
     .notEmpty()

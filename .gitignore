@@ -18,3 +18,6 @@ build/
 *.zip
 Go_Guided_Project_Report.*
 Go_Guided_Explained.pdf
+
+# local demo logins written by Backend/scripts/seed.js
+seed-credentials.local.txt

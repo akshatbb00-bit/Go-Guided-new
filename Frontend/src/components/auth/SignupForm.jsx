@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 import useApi from "../../hooks/useApi";
-import { sendOtp, registerUser } from "../../services/authService";
+import { registerUser } from "../../services/authService";
 
 function SignupForm() {
   // ------------------- State -------------------
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
-  const [hasRequestedOtp, setHasRequestedOtp] = useState(false);
 
   // ------------------- Form -------------------
   const {
@@ -23,50 +21,12 @@ function SignupForm() {
   } = useForm();
 
   // ------------------- API -------------------
-  const { request: sendOtpRequest, loading: otpLoading } = useApi(sendOtp);
-
   const { request: registerRequest, loading: registerLoading } =
     useApi(registerUser);
 
   const navigate = useNavigate();
 
   // ------------------- Handlers -------------------
-
-  const handleOtpRequest = async () => {
-    try {
-      const email = watch("email");
-
-      if (!email) {
-        toast.error("Enter email before requesting OTP.");
-        return;
-      }
-
-      const response = await sendOtpRequest({ data: { email } });
-
-      toast.success(response.message);
-
-      // First-time request
-      if (!hasRequestedOtp) setHasRequestedOtp(true);
-
-      // Start resend cooldown
-      setResendCooldown(60);
-    } catch (err) {
-      const { response } = err;
-      const msg = response?.data?.message || "Something went wrong.";
-      toast.error(msg);
-    }
-  };
-
-  useEffect(() => {
-    if (resendCooldown === 0) return;
-    const interval = setInterval(() => {
-      setResendCooldown((prev) => {
-        if (prev <= 1) clearInterval(interval);
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [resendCooldown]);
 
   const onSubmit = async (formData) => {
     try {
@@ -234,57 +194,6 @@ function SignupForm() {
                 </p>
               )}
             </label>
-          </div>
-
-          {/* OTP Field */}
-          <div className="w-full">
-            <p className="mb-1 text-lg text-green-950">OTP Code</p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="text"
-                placeholder="Enter the OTP code"
-                {...register("otp", {
-                  required: "OTP is required",
-                  minLength: {
-                    value: 4,
-                    message: "OTP must be at least 4 digits",
-                  },
-                })}
-                className="flex-1 focus:border-2 border-black rounded-lg p-2 text-green-950 focus:outline-none"
-              />
-              {!hasRequestedOtp && (
-                <button
-                  type="button"
-                  onClick={handleOtpRequest}
-                  className="sm:w-auto w-full rounded-md bg-green-500 text-white px-4 py-2 font-semibold cursor-pointer hover:bg-green-600 transition-colors disabled:bg-green-300 disabled:cursor-not-allowed"
-                >
-                  {otpLoading ? "Sending" : "Get OTP"}
-                </button>
-              )}
-            </div>
-
-            {/* Resend OTP */}
-            {hasRequestedOtp && (
-              <p className="text-sm mt-1 text-green-900">
-                Didn’t receive it?{" "}
-                <button
-                  type="button"
-                  onClick={handleOtpRequest}
-                  disabled={otpLoading || resendCooldown > 0}
-                  className="text-green-700 font-medium underline hover:text-green-800 cursor-pointer disabled:text-green-400 disabled:cursor-not-allowed"
-                >
-                  {resendCooldown > 0
-                    ? `Resend in ${resendCooldown}s`
-                    : otpLoading
-                    ? "Sending..."
-                    : "Resend OTP"}
-                </button>
-              </p>
-            )}
-
-            {errors.otp && (
-              <p className="text-red-400 text-xs mt-1">{errors.otp.message}</p>
-            )}
           </div>
 
           {/* Submit Button */}
