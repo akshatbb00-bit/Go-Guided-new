@@ -1,12 +1,11 @@
 // update-booking-phoneNumbers.js
 
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, ".env.development") });
 const mongoose = require("mongoose");
 
-// Connection details come from Backend/.env.development (never hard-code secrets)
-const DB_URI = process.env.DB_URI;
-const DB_NAME = process.env.DB_NAME || "go-guided";
+const DB_URI =
+  "mongodb+srv://owner:owner@cluster0.nd23h.mongodb.net/?retryWrites=true&w=majority";
+
+const DB_NAME = "go-guided";
 
 // 11 different realistic Indian mobile numbers
 const phoneNumbers = [
