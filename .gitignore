@@ -1,0 +1,20 @@
+# dependencies
+*/node_modules/
+
+# env files
+.env
+.env.development
+.env.production
+
+# build output
+dist/
+build/
+
+# logs & OS files
+*.log
+.DS_Store
+
+# local deliverables (not part of the codebase)
+*.zip
+Go_Guided_Project_Report.*
+Go_Guided_Explained.pdf
