@@ -53,6 +53,14 @@ function Header() {
           </li>
           <li>
             <NavLink
+              to="/plan-trip"
+              className={({ isActive }) => (isActive ? "text-green-600" : "")}
+            >
+              Plan a Trip
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/about"
               className={({ isActive }) => (isActive ? "text-green-600" : "")}
             >

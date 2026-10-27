@@ -1,7 +1,7 @@
 import { IoIosSettings } from "react-icons/io";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { IoBagHandleOutline } from "react-icons/io5";
-import { FaRegStar } from "react-icons/fa";
+import { FaRegStar, FaRoute } from "react-icons/fa";
 import { FiHelpCircle } from "react-icons/fi";
 import { Menu } from "lucide-react";
 import { MdOutlineLogout } from "react-icons/md";
@@ -24,6 +24,11 @@ const navLinks = [
     to: "bookings",
     label: "My Bookings",
     icon: <IoBagHandleOutline className="text-green-200" />,
+  },
+  {
+    to: "trips",
+    label: "My Trips",
+    icon: <FaRoute className="text-green-200" />,
   },
   {
     to: "reviews",

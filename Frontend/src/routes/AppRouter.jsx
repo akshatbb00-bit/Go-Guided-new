@@ -59,6 +59,9 @@ import GuideBookings from "../components/dashboard/accounts/guide/Bookings";
 import JobApplicationForm from "../components/careers/JobApplicationForm";
 import ResetPassword from "../components/auth/ResetPassword";
 import BookTourForm from "../components/tours/tour/Booktour";
+import PlanTrip from "../pages/PlanTrip";
+import MyTrips from "../components/dashboard/accounts/user/trips/MyTrips";
+import CustomTrips from "../components/dashboard/accounts/admin/CustomTrips";
 import TermsAndConditions from "../pages/Terms";
 import PrivacyPolicy from "../pages/privacy";
 import Analytics from "../components/dashboard/accounts/admin/Analytics";
@@ -95,6 +98,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/plan-trip",
+        Component: PlanTrip,
+      },
+      {
         path: "/about",
         Component: About,
       },
@@ -127,6 +134,7 @@ const router = createBrowserRouter([
             children: [{ index: true, Component: UserBookings }],
           },
           { path: "reviews", Component: UserReviews },
+          { path: "trips", Component: MyTrips },
         ],
       },
 
@@ -143,6 +151,7 @@ const router = createBrowserRouter([
               { path: ":id", Component: BookingDetails },
             ],
           },
+          { path: "trips", Component: CustomTrips },
           {
             path: "tours",
             children: [
@@ -230,6 +239,7 @@ const router = createBrowserRouter([
               { path: ":id", Component: BookingDetails },
             ],
           },
+          { path: "trips", Component: CustomTrips },
           {
             path: "tours",
             children: [

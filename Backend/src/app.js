@@ -35,6 +35,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const geocodeRoutes = require("./routes/geocodeRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const chatBotRoutes = require("./routes/chatbotRoutes");
+const tripRoutes = require("./routes/tripRoutes");
 
 const app = express();
 
@@ -116,6 +117,8 @@ app.use("/api/v1/geocode", geocodeRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 
 app.use("/api/v1/chat", chatBotRoutes);
+
+app.use("/api/v1/trip", tripRoutes);
 
 // =======================
 // Handle Unmatched Routes

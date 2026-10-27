@@ -5,12 +5,18 @@ import NavItem from "../NavItem";
 import { MdOutlineSpaceDashboard, MdOutlineLogout } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
 import { Menu } from "lucide-react";
+import { FaRoute } from "react-icons/fa";
 
 const adminNavLinks = [
   {
     to: ".",
     label: "Dashboard",
     icon: <MdOutlineSpaceDashboard className="text-green-200" />,
+  },
+  {
+    to: "trips",
+    label: "Custom Trips",
+    icon: <FaRoute className="text-green-200" />,
   },
   {
     to: "settings",

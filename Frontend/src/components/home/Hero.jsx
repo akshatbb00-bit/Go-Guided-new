@@ -24,6 +24,13 @@ function Hero({ backgroundImage = "/images/hero.webp" }) {
           >
             Explore Tours
           </button>
+          <button
+            onClick={() => navigate("/plan-trip")}
+            aria-label="Plan your own trip"
+            className="px-5 py-3 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-white/90 hover:bg-white text-green-800 text-base sm:text-lg md:text-xl font-semibold rounded-xl shadow-lg transition duration-300 cursor-pointer"
+          >
+            Plan your own trip
+          </button>
         </div>
       </div>
     </section>
