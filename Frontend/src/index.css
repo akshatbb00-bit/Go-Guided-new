@@ -18,6 +18,13 @@
   }
 }
 
+/* The design is light: make sure the page background is white in every browser and colour mode */
+html,
+body {
+  background-color: #ffffff;
+  color-scheme: light;
+}
+
 html,
 body,
 .scrollbar-hide {
