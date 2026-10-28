@@ -6,6 +6,7 @@ import BottomNav from "../components/common/MobileNav/BottomNav";
 import Navbar from "../components/common/Header";
 import Footer from "../components/common/Footer"; // Desktop
 import ChatWidget from "../components/common/ChatWidget";
+import { DemoCheckoutHost } from "../components/payments/DemoCheckout";
 
 function AppLayout() {
   const [isMobile, setIsMobile] = useState(false);
@@ -36,6 +37,7 @@ function AppLayout() {
       {isMobile && <BottomNav />}
 
       <ChatWidget />
+      <DemoCheckoutHost />
     </div>
   );
 }

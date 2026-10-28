@@ -14,7 +14,7 @@ exports.updateGuideStatusValidator = validate([
     .withMessage("Please provide the date when you'll be available again.")
     .bail()
     .isISO8601()
-    .withMessage("Please enter a valid date (e.g. 2025-08-15).")
+    .withMessage("Please enter a valid date (e.g. 2026-08-15).")
     .bail()
     .custom((value) => {
       const inputDate = new Date(value);

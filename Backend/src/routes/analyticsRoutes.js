@@ -3,7 +3,7 @@ const Review = require("../models/reviewModel");
 const SearchLog = require("../models/searchModel");
 const Tour = require("../models/tourModel");
 const authMiddleware = require("../middlewares/authMiddleware");
-const ai = require("../config/gemini"); // GoogleGenAI instance
+const { generate } = require("../utils/geminiClient"); // Gemini with model fallback
 require("dotenv").config();
 
 function parseGeminiJSON(text) {
@@ -44,10 +44,7 @@ ${reviewTexts}
 `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+    const response = await generate({ contents: prompt });
 
     // Remove ```json ... ``` if Gemini wraps it in Markdown
     const cleaned = response.text
@@ -92,10 +89,7 @@ ${searchList}
 `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+    const response = await generate({ contents: prompt });
 
     return parseGeminiJSON(response.text);
   } catch (err) {

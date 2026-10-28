@@ -6,6 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 const razorpay = require("../config/razorpay");
 const { calculateTripPrice, BUDGET_LEVELS } = require("../utils/tripPricing");
 const { generateItinerary, sanitizeStops } = require("../utils/tripPlanner");
+const { isDemoMode, newDemoOrder } = require("../utils/demoPayments");
 
 // ---------- validation helpers ----------
 const str = (v, min, max, label) => {
@@ -54,6 +55,8 @@ exports.suggestTrip = catchAsync(async (req, res, next) => {
   try {
     plan = await generateItinerary({ ...input, startDate: input.startDate.toISOString().slice(0, 10) });
   } catch (err) {
+    console.error("Trip planner error:", err.aiBusy ? err.message : err);
+    if (err.aiBusy) return next(new AppError(err.message, 503));
     return next(new AppError("The trip assistant could not make a plan right now. Please try again.", 502));
   }
   if (!plan.stops.length) return next(new AppError("No valid places were found. Please try a different destination.", 502));
@@ -143,15 +146,18 @@ exports.createTripOrder = catchAsync(async (req, res, next) => {
   }));
   trip.phoneNumber = phoneNumber;
 
-  const order = await razorpay.orders.create({
-    amount: trip.pricing.total * 100, // paise
-    currency: "INR",
-    receipt: `trip_${trip._id}`,
-  });
+  // Demo mode: simulated checkout (see utils/demoPayments.js); otherwise a real Razorpay order
+  const order = isDemoMode()
+    ? newDemoOrder(trip.pricing.total * 100)
+    : await razorpay.orders.create({
+        amount: trip.pricing.total * 100, // paise
+        currency: "INR",
+        receipt: `trip_${trip._id}`,
+      });
   trip.razorpayOrderId = order.id;
   await trip.save();
 
-  res.status(200).json({ isSuccess: true, data: { id: order.id, amount: order.amount, currency: order.currency } });
+  res.status(200).json({ isSuccess: true, data: { id: order.id, amount: order.amount, currency: order.currency, ...(order.demo ? { demo: true } : {}) } });
 });
 
 // POST /trip/:id/verify-payment

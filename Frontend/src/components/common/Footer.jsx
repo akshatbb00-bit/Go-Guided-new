@@ -143,7 +143,7 @@ function Footer() {
 
       {/* Copyright */}
       <p className="text-center text-[16px] font-medium text-green-900">
-        &copy; 2025 GoGuided. All rights reserved.
+        &copy; {new Date().getFullYear()} GoGuided. All rights reserved.
       </p>
     </footer>
   );

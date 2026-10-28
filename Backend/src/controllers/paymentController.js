@@ -5,6 +5,7 @@ const razorpay = require("../config/razorpay"); // Razorpay instance
 const Booking = require("../models/bookingModel");
 const User = require("../models/userModel");
 const Tour = require("../models/tourModel");
+const { isDemoMode, newDemoOrder, signDemoPayment } = require("../utils/demoPayments");
 
 // CREATE PAYMENT ORDER
 exports.createPaymentOrder = catchAsync(async (req, res, next) => {
@@ -14,6 +15,12 @@ exports.createPaymentOrder = catchAsync(async (req, res, next) => {
     currency: "INR",
     receipt: `receipt_${Date.now()}`,
   };
+
+  // Demo mode: simulated checkout, no call to Razorpay
+  if (isDemoMode()) {
+    const demo = newDemoOrder(options.amount, options.currency);
+    return res.status(200).json({ isSuccess: true, data: demo });
+  }
 
   const order = await razorpay.orders.create(options);
 
@@ -25,6 +32,16 @@ exports.createPaymentOrder = catchAsync(async (req, res, next) => {
       amount: order.amount,
     },
   });
+});
+
+// DEMO PAYMENT: the demo portal calls this after the user "pays". Only works for demo orders in demo mode.
+exports.signDemoPaymentRequest = catchAsync(async (req, res, next) => {
+  const { order_id } = req.body;
+  if (!isDemoMode()) return next(new AppError("Demo payments are turned off", 404));
+  if (typeof order_id !== "string" || !order_id.startsWith("order_demo_")) {
+    return next(new AppError("Not a demo order", 400));
+  }
+  res.status(200).json({ isSuccess: true, data: signDemoPayment(order_id) });
 });
 
 // VERIFY PAYMENT

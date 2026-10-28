@@ -16,4 +16,10 @@ router.post(
   paymentController.verifyPayment
 );
 
+router.post(
+  "/demo-sign",
+  authMiddleware.protect,
+  paymentController.signDemoPaymentRequest
+);
+
 module.exports = router;

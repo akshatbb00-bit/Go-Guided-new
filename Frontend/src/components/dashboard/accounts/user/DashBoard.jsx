@@ -1,3 +1,4 @@
+import { Navigate } from "react-router";
 import { useUser } from "../../../../context/UserContext";
 import Layout from "../AccountLayout";
 import UserLinks from "./UserLinks";
@@ -15,7 +16,8 @@ function DashBoard() {
     );
   }
 
-  if (!user) return <LoaderOverlay />;
+  if (isUserLoading) return <LoaderOverlay />;
+  if (!user) return <Navigate to="/login" replace />;
 
   return <AccessDenied />;
 }

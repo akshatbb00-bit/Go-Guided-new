@@ -1,7 +1,5 @@
 // Builds a day-wise multi-stop itinerary (any type of trip) with Google Gemini.
-const ai = require("../config/gemini");
-
-const MODEL = "gemini-2.5-flash";
+const { generate } = require("./geminiClient");
 
 const buildPrompt = ({ origin, destination, purpose, startDate, days, travellers, budgetLevel, preferences }) => `
 You are an expert Indian travel planner. You plan any kind of trip: pilgrimage, family holiday, adventure and trekking, heritage and culture, nature and wildlife, honeymoon, friends' trips and more.
@@ -48,8 +46,7 @@ const parseJson = (text) => {
 };
 
 const generateItinerary = async (params) => {
-  const response = await ai.models.generateContent({
-    model: MODEL,
+  const response = await generate({
     contents: buildPrompt(params),
     config: { responseMimeType: "application/json" },
   });

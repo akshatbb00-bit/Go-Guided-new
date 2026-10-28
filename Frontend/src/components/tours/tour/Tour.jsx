@@ -49,7 +49,8 @@ function Tour() {
 
       // Check if current user has liked the tour
       setLiked(
-        res?.data?.tour.likes.some((id) => id.toString() === user.id.toString())
+        Boolean(user?.id) &&
+          res?.data?.tour.likes.some((id) => id.toString() === user.id.toString())
       );
     } catch (error) {
       console.error(error);
@@ -57,7 +58,7 @@ function Tour() {
   };
   useEffect(() => {
     getTour();
-  }, [slug, user.id]);
+  }, [slug, user?.id]);
 
   const handleLike = async () => {
     const action = liked ? "unlike" : "like";

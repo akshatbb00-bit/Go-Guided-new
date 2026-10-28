@@ -73,6 +73,8 @@ const sendTokenAsCookie = (user, token, res) => {
   res.status(200).json({
     isSuccess: true,
     message: "Logged in successfully",
+    // also returned in the body so the website still works in browsers that block cross-site cookies
+    token,
     user: {
       id: user._id,
       name: `${user.firstName} ${user.lastName}`.trim(),
@@ -266,10 +268,11 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 // Logout user by clearing the authentication cookie
 exports.logout = catchAsync(async (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "None" : "Lax",
     path: "/",
   });
 

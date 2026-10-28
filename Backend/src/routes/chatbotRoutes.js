@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const ai = require("../config/gemini");
+const { generate, AI_BUSY_MESSAGE } = require("../utils/geminiClient");
 
 // Models
 const User = require("../models/userModel");
@@ -91,10 +91,7 @@ Instructions:
 `;
 
     // 7️⃣ Call Gemini
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+    const response = await generate({ contents: prompt });
 
     const answer = response.text.trim();
 
@@ -104,7 +101,8 @@ Instructions:
 
     res.json({ answer });
   } catch (err) {
-    console.error("❌ Chat error:", err);
+    console.error("❌ Chat error:", err.aiBusy ? err.message : err);
+    if (err.aiBusy) return res.status(503).json({ error: AI_BUSY_MESSAGE });
     res
       .status(500)
       .json({ error: "Something went wrong", details: err.message });

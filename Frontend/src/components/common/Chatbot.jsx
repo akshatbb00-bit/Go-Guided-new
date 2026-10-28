@@ -147,7 +147,10 @@ function Chatbot({ onClose }) {
         ...prev,
         {
           role: "assistant",
-          content: "Sorry, something went wrong. Please try again.",
+          content:
+            err?.response?.status === 503
+              ? err.response.data?.error || "The AI assistant is busy. Please try again in a little while."
+              : "Sorry, something went wrong. Please try again.",
           animate: true,
         },
       ]);

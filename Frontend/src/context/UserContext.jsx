@@ -5,16 +5,9 @@ import { getMe } from "../services/authService";
 // Create the context
 const UserContext = createContext();
 
-// Default user object
-const defaultUser = {
-  role: "user",
-  name: "Aman",
-  permissions: [],
-};
-
 // Provider component
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(); // default user with role
+  const [user, setUser] = useState(null); // null means nobody is logged in
   const [loading, setLoading] = useState(true);
 
   const setUserContext = (userData) => {
@@ -27,18 +20,14 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const response = await request({});
-        if (response && response.user) {
-          setUserContext(response.user);
-        } else {
-          setUserContext(defaultUser);
-        }
+        setUserContext(response && response.user ? response.user : null);
       } catch (err) {
         if (
           err.response?.status === 401 ||
           err.response?.status === 403 ||
           err.response?.status === 404
         ) {
-          setUserContext(defaultUser);
+          setUserContext(null);
         } else {
           console.error("An unexpected error occurred:", err);
         }
@@ -52,7 +41,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ isUserLoading: loading, user, setUserContext }}
+      value={{ isUserLoading: loading, user, isLoggedIn: Boolean(user), setUserContext }}
     >
       {children}
     </UserContext.Provider>
